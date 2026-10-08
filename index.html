@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RANDOM DICE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app">
+
+    <h1>RANDOM DICE</h1>
+
+    <div class="top-row">
+      <select>
+        <option>4 DICE</option>
+      </select>
+
+      <select>
+        <option>COLOR DICE</option>
+      </select>
+    </div>
+
+    <div id="diceArea" class="dice-area"></div>
+
+    <button id="rollBtn" class="roll-btn">
+      ROLL AGAIN!
+    </button>
+
+    <div class="colors">
+
+      <button class="color-name active" data-color="Red">Red</button>
+      <button class="color-name active" data-color="Orange">Orange</button>
+      <button class="color-name active" data-color="Yellow">Yellow</button>
+      <button class="color-name active" data-color="Green">Green</button>
+      <button class="color-name active" data-color="Blue">Blue</button>
+      <button class="color-name active" data-color="Purple">Purple</button>
+
+    </div>
+
+    <label class="background-control">
+      <span>Background</span>
+      <input id="backgroundInput" type="file" accept="image/*">
+    </label>
+
+  </main>
+
+
+<script>
+
+const palette = {
+
+  Red: "#ff1010",
+  Orange: "#ff8a00",
+  Yellow: "#ffd719",
+  Green: "#079b08",
+  Blue: "#1111e8",
+  Purple: "#8d25d8"
+
+};
+
+
+const diceArea =
+  document.getElementById("diceArea");
+
+const rollBtn =
+  document.getElementById("rollBtn");
+
+const colorButtons =
+  [...document.querySelectorAll(".color-name")];
+
+const backgroundInput =
+  document.getElementById("backgroundInput");
+
+
+let lastRoll = [];
+let rolling = false;
+
+
+/* ƏLAVƏ: klaviatura ilə müvəqqəti bağlanan rəng */
+
+let blockedColor = null;
+
+
+/* ƏLAVƏ: klaviatura düymələri */
+
+const colorKeys = {
+
+  d: "Red",
+  e: "Blue",
+  v: "Yellow",
+  g: "Orange",
+  l: "Purple",
+  n: "Green"
+
+};
+
+
+function enabledColors() {
+
+  return colorButtons
+    .filter(button =>
+      button.classList.contains("active")
+    )
+    .map(button =>
+      button.dataset.color
+    )
+    .filter(color =>
+      color !== blockedColor
+    );
+
+}
+
+
+function randomColor(colors) {
+
+  return colors[
+    Math.floor(
+      Math.random() * colors.length
+    )
+  ];
+
+}
+
+
+function getResult() {
+
+  const colors = enabledColors();
+
+  if (!colors.length) {
+    return [];
+  }
+
+  let result;
+
+  do {
+
+    result = Array.from(
+      { length: 4 },
+      () => randomColor(colors)
+    );
+
+  } while (
+    colors.length > 1 &&
+    result.join("|") === lastRoll.join("|")
+  );
+
+  lastRoll = result;
+
+  return result;
+
+}
+
+
+function showDice(result) {
+
+  diceArea.innerHTML = "";
+
+  result.forEach(color => {
+
+    const die =
+      document.createElement("div");
+
+    die.className = "die";
+
+    die.style.setProperty(
+      "--die-color",
+      palette[color]
+    );
+
+    die.innerHTML =
+      '<span class="pip"></span>';
+
+    diceArea.appendChild(die);
+
+  });
+
+}
+
+
+/* İlk dice */
+
+showDice(getResult());
+
+
+/* ROLL AGAIN */
+
+rollBtn.addEventListener("click", () => {
+
+  if (rolling) return;
+
+  const result = getResult();
+
+  if (!result.length) return;
+
+  rolling = true;
+
+  /*
+    Dice-ləri boz vəziyyətə gətiririk
+    və titrəmə başlayır.
+  */
+
+  diceArea.classList.add("rolling");
+
+  setTimeout(() => {
+
+    showDice(result);
+
+    diceArea.classList.remove("rolling");
+
+    rolling = false;
+
+    /* ƏLAVƏ: rəng yenidən aktiv olur */
+
+    blockedColor = null;
+
+  }, 1000);
+
+});
+
+
+/* Rəngləri açıb-bağlama */
+
+colorButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    /* ƏLAVƏ: artıq kliklə bağlanmır */
+
+    return;
+
+  });
+
+});
+
+
+/* ƏLAVƏ: klaviaturadan rəng seçmək */
+
+document.addEventListener("keydown", event => {
+
+  if (rolling) return;
+
+  const key =
+    event.key.toLowerCase();
+
+  const color =
+    colorKeys[key];
+
+  if (!color) return;
+
+  blockedColor = color;
+
+});
+
+
+/* Arxa fon şəkli */
+
+backgroundInput.addEventListener(
+  "change",
+  event => {
+
+    const file =
+      event.target.files[0];
+
+    if (!file) return;
+
+    const reader =
+      new FileReader();
+
+    reader.onload = e => {
+
+      document.body.style.backgroundImage =
+        `linear-gradient(
+          rgba(0,0,0,.18),
+          rgba(0,0,0,.18)
+        ),
+        url("${e.target.result}")`;
+
+    };
+
+    reader.readAsDataURL(file);
+
+  }
+);
+
+</script>
+
+</body>
+</html>

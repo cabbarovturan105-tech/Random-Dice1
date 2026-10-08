@@ -1,0 +1,452 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #58a6f4;
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-attachment: fixed;
+
+}
+
+.app {
+
+  width:
+    min(
+      620px,
+      calc(100vw - 28px)
+    );
+
+  padding:
+    28px 22px 24px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(88,166,244,.97);
+
+  text-align: center;
+
+}
+
+h1 {
+
+  margin:
+    0 0 24px;
+
+  color: white;
+
+  font-size:
+    clamp(30px, 6vw, 44px);
+
+  font-weight: 900;
+
+  letter-spacing: -1.5px;
+
+  text-shadow:
+    0 2px 1px rgba(0,0,0,.18);
+
+}
+
+.top-row {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 18px;
+
+  margin-bottom: 28px;
+
+}
+
+select {
+
+  width: 100%;
+
+  height: 52px;
+
+  border:
+    3px solid #168de8;
+
+  border-radius: 8px;
+
+  background: white;
+
+  color: #087bd3;
+
+  padding:
+    0 15px;
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+}
+
+.dice-area {
+
+  min-height: 92px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+
+}
+
+.die {
+
+  position: relative;
+
+  width: 86px;
+
+  height: 86px;
+
+  border-radius: 13px;
+
+  background: white;
+
+  padding: 9px;
+
+  box-shadow:
+    0 3px 13px
+    rgba(255,255,255,.75);
+
+}
+
+.die::before {
+
+  content: "";
+
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  border-radius: 5px;
+
+  background:
+    var(--die-color);
+
+}
+
+.pip {
+
+  position: absolute;
+
+  width: 17px;
+
+  height: 17px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  left: 50%;
+
+  top: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  z-index: 2;
+
+  box-shadow:
+    0 0 6px
+    rgba(255,255,255,.85);
+
+}
+
+
+/* YENİ: 1 saniyəlik boz + titrəmə */
+
+.dice-area.rolling .die {
+
+  animation:
+    diceShake 0.09s infinite;
+
+}
+
+.dice-area.rolling .die::before {
+
+  background: #8a8a8a;
+
+}
+
+.dice-area.rolling .pip {
+
+  background: #d5d5d5;
+
+  box-shadow: none;
+
+}
+
+@keyframes diceShake {
+
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(-3px, 2px) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate(3px, -2px) rotate(2deg);
+  }
+
+  75% {
+    transform: translate(-2px, -2px) rotate(-1deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+}
+
+
+.roll-btn {
+
+  width: 100%;
+
+  height: 58px;
+
+  border:
+    2px solid white;
+
+  border-radius: 8px;
+
+  background: #ffd522;
+
+  color: white;
+
+  font-size: 21px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.15);
+
+}
+
+.roll-btn:active {
+
+  transform:
+    scale(.99);
+
+}
+
+
+.colors {
+
+  display: flex;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap:
+    7px 12px;
+
+  margin-top: 14px;
+
+}
+
+.color-name {
+
+  border: 0;
+
+  background: transparent;
+
+  padding:
+    2px 4px;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  cursor: default;
+
+  transition:
+    opacity .12s ease;
+
+}
+
+.color-name.active[data-color="Red"] {
+  color: #e60000;
+}
+
+.color-name.active[data-color="Orange"] {
+  color: #f47700;
+}
+
+.color-name.active[data-color="Yellow"] {
+  color: #e4a900;
+}
+
+.color-name.active[data-color="Green"] {
+  color: #008b08;
+}
+
+.color-name.active[data-color="Blue"] {
+  color: #1212cc;
+}
+
+.color-name.active[data-color="Purple"] {
+  color: #7620bb;
+}
+
+.color-name:not(.active) {
+
+  opacity: .16;
+
+}
+
+
+.background-control {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 16px;
+
+  color:
+    rgba(255,255,255,.75);
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  opacity: .65;
+
+}
+
+.background-control input {
+
+  width: 150px;
+
+  font-size: 10px;
+
+}
+
+
+@media (max-width: 520px) {
+
+  .app {
+
+    padding:
+      22px 15px 20px;
+
+  }
+
+  .top-row {
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+
+  }
+
+  select {
+
+    height: 46px;
+
+    font-size: 15px;
+
+  }
+
+  .dice-area {
+
+    gap: 8px;
+
+  }
+
+  .die {
+
+    width: 68px;
+
+    height: 68px;
+
+    border-radius: 10px;
+
+    padding: 7px;
+
+  }
+
+  .pip {
+
+    width: 13px;
+
+    height: 13px;
+
+  }
+
+  .roll-btn {
+
+    height: 52px;
+
+    font-size: 18px;
+
+  }
+
+  .color-name {
+
+    font-size: 12px;
+
+  }
+
+}
+
+
+@media (max-width: 350px) {
+
+  .die {
+
+    width: 58px;
+
+    height: 58px;
+
+  }
+
+  .dice-area {
+
+    gap: 5px;
+
+  }
+
+}
